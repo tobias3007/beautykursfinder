@@ -1,6 +1,7 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import AnbieterKarte from '../../../components/AnbieterKarte.astro';
+import Preisband from '../../../components/Preisband.astro';
 import { hatSubstanz, stadtSeiten, preisStat, eur, datum, datenstand, feldWert, kursVon, sortiere } from '../../../lib/daten.js';
 export function getStaticPaths() { return stadtSeiten.map((x) => ({ params: { kursart: x.kursart.slug, stadt: x.stadt.slug }, props: x })); }
 const { kursart: k, stadt, liste } = Astro.props;
@@ -20,6 +21,7 @@ const jl = [{ '@context': 'https://schema.org', '@type': 'ItemList', name: `${k.
 <Base titel={titel} beschreibung={`In ${stadt.name} bieten ${liste.length} Anbieter ${k.name}-Schulungen an${s ? `, Preise ${eur(s.min)} bis ${eur(s.max)}` : ''}. Stand ${datum(datenstand)}.`} krumen={[{ name: `${k.name}-Schulung`, href: `/${k.slug}/` }, { name: stadt.name, href: `/${k.slug}/${stadt.slug}/` }]} jsonld={jl}>
   <h1>{k.name}-Schulung in {stadt.name}</h1>
   <p class="antwort">In {stadt.name} bieten {liste.length} Anbieter eine {k.name}-Schulung an.{s ? ` ${s.n} von ihnen nennen einen Preis, er liegt zwischen ${eur(s.min)} und ${eur(s.max)}.` : ' Keiner dieser Anbieter nennt auf seiner Webseite einen Preis.'} Stand {datum(datenstand)}, Quelle: die Webseiten der Anbieter. Was nicht dasteht, haben wir nicht ergänzt.</p>
+  <Preisband liste={mitPreis} titel={`${k.name} in ${stadt.name}`} />
   <div class="filter" role="group" aria-label="Anbieter filtern">
     <label><input type="checkbox" id="f-preis" /> Nur mit Preis</label>
     <label><input type="checkbox" id="f-zert" /> Nur mit Zertifikat</label>

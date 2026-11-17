@@ -1,0 +1,18 @@
+---
+import Base from '../../layouts/Base.astro';
+import { anbieter, staedte, stadtSeiten, datum, datenstand, kursarten } from '../../lib/daten.js';
+const liste = staedte.map((s) => {
+  const hier = anbieter.filter((a) => a.stadt.wert === s.name);
+  return { s, hier, seiten: stadtSeiten.filter((x) => x.stadt.slug === s.slug) };
+}).filter((x) => x.hier.length > 0).sort((a, b) => b.hier.length - a.hier.length);
+const nSt = liste.length;
+---
+<Base titel="Beauty-Schulungen nach Stadt: 39 Großstädte" beschreibung={`Wimpern-, PMU- und Microblading-Schulungen in ${nSt} deutschen Großstädten, mit Anzahl der Anbieter je Stadt. Stand ${datum(datenstand)}.`} krumen={[{ name: 'Städte', href: '/staedte/' }]}>
+  <h1>Beauty-Schulungen nach Stadt</h1>
+  <p class="antwort">Wir haben Anbieter in {nSt} Großstädten ab 200.000 Einwohnern erfasst, die meisten in {liste[0].s.name} ({liste[0].hier.length}), {liste[1].s.name} ({liste[1].hier.length}) und {liste[2].s.name} ({liste[2].hier.length}). Stand {datum(datenstand)}. Städte mit mindestens drei Anbietern je Kursart haben eine eigene Seite.</p>
+  <table>
+    <thead><tr><th>Stadt</th><th>Anbieter</th>{kursarten.map((k) => <th>{k.name.replace('Wimpernverlängerung', 'Wimpern').replace('Wimpernlifting', 'Lifting').replace('Permanent Make-up', 'PMU')}</th>)}</tr></thead>
+    <tbody>{liste.map(({ s, hier, seiten }) => <tr><th scope="row">{s.name}</th><td>{hier.length}</td>{kursarten.map((k) => { const x = seiten.find((y) => y.kursart.id === k.id); const n = hier.filter((a) => a.kurse.some((c) => c.kursart === k.id)).length; return <td>{x ? <a href={`/${k.slug}/${s.slug}/`}>{n}</a> : n || '–'}</td>; })}</tr>)}</tbody>
+  </table>
+  <p class="stand">Zahl = Anbieter mit dieser Kursart. Verlinkt, wenn es eine Stadtseite gibt (ab drei Anbietern). Kleinere Städte als 200.000 Einwohner haben wir nicht erfasst.</p>
+</Base>

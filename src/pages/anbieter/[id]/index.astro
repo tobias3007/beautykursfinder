@@ -1,6 +1,6 @@
 ---
 import Base from '../../../layouts/Base.astro';
-import { termineText, anbieterLink, anbieter, hatSubstanz, mailEintrag, auf, preisText, feldWert, datum, datenstand, kursarten, stadtSeiten } from '../../../lib/daten.js';
+import { avatar, termineText, anbieterLink, anbieter, hatSubstanz, mailEintrag, auf, preisText, feldWert, datum, datenstand, kursarten, stadtSeiten } from '../../../lib/daten.js';
 export function getStaticPaths() { return anbieter.map((a) => ({ params: { id: a.id }, props: { a } })); }
 const { a } = Astro.props;
 const stadtName = a.stadt.wert;
@@ -16,9 +16,10 @@ krumen.push({ name: a.name.wert, href: `/anbieter/${a.id}/` });
 const tel = feldWert(a.telefon);
 const lb = { '@context': 'https://schema.org', '@type': 'LocalBusiness', name: a.name.wert, url: a.webseite.wert, address: { '@type': 'PostalAddress', addressLocality: stadtName, addressCountry: 'DE' }, ...(tel ? { telephone: tel } : {}) };
 const gepr = a.name.geprueft;
+const av = avatar(a.name.wert);
 ---
 <Base titel={titel} beschreibung={`${a.name.wert} in ${stadtName} bietet laut eigener Webseite Schulungen zu ${arten.join(', ')} an. Preis, Dauer und Zertifikat mit Quelle, Stand ${datum(gepr)}.`} noindex={!hatSubstanz(a)} krumen={krumen} jsonld={[lb]} stand={false}>
-  <h1>{a.name.wert}, {stadtName}</h1>
+  <h1 class="mitbild"><span class="avatar gross" style={`background:${av.farbe}`} aria-hidden="true">{av.kurz}</span><span>{a.name.wert}, {stadtName}</span></h1>
   <p class="antwort">{a.name.wert} in {stadtName} bietet laut der eigenen Webseite Schulungen zu {arten.join(', ')} an. Die Angaben unten stammen von dieser Webseite, geprüft am {datum(gepr)}. Fehlendes heißt „auf Anfrage“.</p>
   <div class="aktionen">
     <a class="btn" href={anbieterLink(a, erste.def.slug, 'profil')} rel="noopener" target="_blank" data-pl="Klick Webseite" data-anbieter={a.id}>Zur Webseite</a>

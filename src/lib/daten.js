@@ -84,3 +84,12 @@ export const anbieterLink = (a, kampagne, kontext) => {
 };
 
 export const termineText = (f) => { const w = feldWert(f); return w && w.length ? w.slice(0, 3).map(datum).join(', ') : null; };
+
+// Initialen-Avatar: Kürzel aus dem Namen, Farbe aus einem festen Satz (alle mit ausreichendem Kontrast zu Weiß)
+const FARBEN = ['#7b2d5b', '#2d5b7b', '#2d7b5b', '#7b5b2d', '#5b2d7b', '#7b2d3f', '#3f5b2d', '#2d4f7b'];
+export const avatar = (name) => {
+  const worte = name.replace(/[^\p{L}\p{N} ]/gu, ' ').split(/\s+/).filter((w) => w.length > 1 && !/^(und|by|der|die|das|beauty|studio|academy|akademie|kosmetik|institut|schule)$/i.test(w));
+  const kurz = ((worte[0] || name)[0] + (worte[1] ? worte[1][0] : (worte[0] || name)[1] || '')).toUpperCase();
+  let h = 0; for (const c of name) h = (h * 31 + c.codePointAt(0)) >>> 0;
+  return { kurz, farbe: FARBEN[h % FARBEN.length] };
+};

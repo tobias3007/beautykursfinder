@@ -1,7 +1,8 @@
 ---
-import { auf, preisText, feldWert, telHref, anbieterLink, termineText } from '../lib/daten.js';
+import { auf, preisText, feldWert, telHref, anbieterLink, termineText, avatar } from '../lib/daten.js';
 const { a, k, mitStadt = false, kontext = 'liste' } = Astro.props;
 const ziel = anbieterLink(a, k.def.slug, kontext);
+const av = avatar(a.name.wert);
 const preis = feldWert(k.preis) !== null;
 const zert = feldWert(k.zertifikat) !== null;
 const tel = telHref(a);
@@ -11,7 +12,7 @@ const hat = preis || andere;
 ---
 <article class="karte" id={a.id} data-preis={preis ? '1' : '0'} data-zert={zert ? '1' : '0'}>
   <div class="kopf">
-    <h3><a href={`/anbieter/${a.id}/`}>{a.name.wert}</a></h3>
+    <h3 class="mitavatar"><span class="avatar" style={`background:${av.farbe}`} aria-hidden="true">{av.kurz}</span><a href={`/anbieter/${a.id}/`}>{a.name.wert}</a></h3>
     {preis && <span class="preis">{preisText(k.preis)}</span>}
   </div>
   {mitStadt && <div class="ort">{a.stadt.wert}</div>}

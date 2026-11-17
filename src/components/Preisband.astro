@@ -1,0 +1,22 @@
+---
+import { eur, feldWert, preisStat } from '../lib/daten.js';
+// Punktdiagramm der niedrigsten Kurspreise. liste: [{ a, k }] mit Preisfeld.
+const { liste, titel } = Astro.props;
+const s = preisStat(liste);
+const werte = liste.map((x) => feldWert(x.k.preis).min).sort((a, b) => a - b);
+const W = 720, H = 92, L = 16, R = 16, y = 44;
+const lo = Math.floor((s?.min ?? 0) / 100) * 100, hi = Math.ceil((s?.max ?? 100) / 100) * 100;
+const px = (v) => L + ((v - lo) / Math.max(1, hi - lo)) * (W - L - R);
+const text = s ? `${titel}: ${werte.length} Preise, niedrigster ${eur(s.min)}, Median ${eur(s.median)}, höchster ${eur(s.max)}.` : '';
+---
+{s && liste.length >= 2 && <figure class="preisband">
+  <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={text} width="100%" height="auto" preserveAspectRatio="xMidYMid meet">
+    <line x1={L} y1={y} x2={W - R} y2={y} stroke="#e3e6ec" stroke-width="6" stroke-linecap="round" />
+    <line x1={px(s.median)} y1={y - 22} x2={px(s.median)} y2={y + 22} stroke="#7b2d5b" stroke-width="2" stroke-dasharray="3 3" />
+    {werte.map((v) => <circle cx={px(v)} cy={y} r="7" fill="#7b2d5b" fill-opacity=".35" />)}
+    <text x={px(s.min)} y={y + 40} font-size="14" fill="#566070" text-anchor="start">{eur(s.min)}</text>
+    <text x={px(s.max)} y={y + 40} font-size="14" fill="#566070" text-anchor="end">{eur(s.max)}</text>
+    <text x={Math.min(W - 90, Math.max(90, px(s.median)))} y={y - 30} font-size="14" font-weight="700" fill="#7b2d5b" text-anchor="middle">Median {eur(s.median)}</text>
+  </svg>
+  <figcaption class="stand">{text} Jeder Punkt ist der niedrigste Kurspreis eines Anbieters, wie auf dessen Webseite genannt.</figcaption>
+</figure>}
