@@ -22,6 +22,6 @@ const jl = [{ '@context': 'https://schema.org', '@type': 'ItemList', name: `${k.
     <label><input type="checkbox" id="f-preis" /> Nur mit Preis</label>
     <label><input type="checkbox" id="f-zert" /> Nur mit Zertifikat</label>
   </div>
-  <div class="karten">{sortiert.map((a) => <AnbieterKarte a={a} k={kursVon(a, k.id)} />)}</div>
+  <div class="karten">{sortiert.map((a) => <AnbieterKarte a={a} k={kursVon(a, k.id)} kontext={`stadt-${stadt.slug}`} />)}</div>
   <p class="stand">Preise so, wie der Anbieter sie nennt, brutto oder netto je nach Anbieter. „Zertifikat“ meint die Bescheinigung, die der Anbieter selbst nennt. <a href={`/preise/${k.slug}/`}>Preisübersicht {k.name}</a> · <a href={`/${k.slug}/`}>Alle Städte</a></p>
 </Base>

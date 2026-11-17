@@ -71,3 +71,14 @@ export const sortiere = (liste, art) => [...liste].sort((x, y) => {
   return wy - wx || x.name.wert.localeCompare(y.name.wert, 'de');
 });
 export const telHref = (a) => (feldWert(a.telefon) ? 'tel:' + a.telefon.wert.replace(/[^\d+]/g, '') : null);
+
+// Link zum Anbieter mit UTM-Parametern, damit der Anbieter die Herkunft in seiner Statistik sieht.
+// Bestehende Parameter der Anbieter-URL bleiben erhalten. In strukturierten Daten bleibt die URL sauber.
+export const anbieterLink = (a, kampagne, kontext) => {
+  const u = new URL(a.webseite.wert);
+  u.searchParams.set('utm_source', config.domain);
+  u.searchParams.set('utm_medium', 'verzeichnis');
+  u.searchParams.set('utm_campaign', kampagne);
+  u.searchParams.set('utm_content', kontext);
+  return u.href;
+};

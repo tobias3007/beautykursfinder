@@ -20,6 +20,14 @@ const alle = [
   <title>{titel}</title>
   <meta name="description" content={beschreibung} />
   <link rel="canonical" href={canonical} />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="de_DE" />
+  <meta property="og:site_name" content={land.name} />
+  <meta property="og:title" content={titel} />
+  <meta property="og:description" content={beschreibung} />
+  <meta property="og:url" content={canonical} />
+  <meta name="twitter:card" content="summary" />
   {noindex && <meta name="robots" content="noindex, follow" />}
   {alle.map((j) => <script type="application/ld+json" set:html={JSON.stringify(j)} />)}
   <!-- Datenschutzfreundliche Reichweitenmessung mit Plausible, ohne Cookies -->

@@ -1,6 +1,7 @@
 ---
-import { auf, preisText, feldWert, telHref } from '../lib/daten.js';
-const { a, k, mitStadt = false } = Astro.props;
+import { auf, preisText, feldWert, telHref, anbieterLink } from '../lib/daten.js';
+const { a, k, mitStadt = false, kontext = 'liste' } = Astro.props;
+const ziel = anbieterLink(a, k.def.slug, kontext);
 const preis = feldWert(k.preis) !== null;
 const zert = feldWert(k.zertifikat) !== null;
 const tel = telHref(a);
@@ -20,7 +21,7 @@ const hat = preis || andere;
   </dl>}
   {!hat && <p class="leer">Preis, Dauer und Zertifikat nennt der Anbieter auf seiner Webseite nicht. Frage direkt dort an.</p>}
   <div class="aktionen">
-    <a class="btn" href={a.webseite.wert} rel="noopener" target="_blank" data-pl="Klick Webseite" data-anbieter={a.id}>Zur Webseite</a>
+    <a class="btn" href={ziel} rel="noopener" target="_blank" data-pl="Klick Webseite" data-anbieter={a.id}>Zur Webseite</a>
     {tel && <a class="btn zweit" href={tel} data-pl="Klick Telefon" data-anbieter={a.id}>Anrufen</a>}
   </div>
 </article>

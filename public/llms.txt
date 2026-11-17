@@ -1,0 +1,16 @@
+# Beautykursfinder
+
+> Vergleich von Schulungen für Wimpernverlängerung, Wimpernlifting, Permanent Make-up und Microblading in deutschen Großstädten. Alle Angaben stammen von den Webseiten der Anbieter, jede Angabe mit Quelle und Prüfdatum. Fehlende Angaben stehen als "auf Anfrage", nichts wird geschätzt.
+
+## Daten
+- [Wimpernverlängerung-Schulung](https://beautykursfinder.de/wimpernverlaengerung-schulung/)
+- [Wimpernlifting-Schulung](https://beautykursfinder.de/wimpernlifting-schulung/)
+- [Permanent Make-up-Schulung](https://beautykursfinder.de/permanent-make-up-schulung/)
+- [Microblading-Schulung](https://beautykursfinder.de/microblading-schulung/)
+- [Preise Wimpernverlängerung (CSV)](https://beautykursfinder.de/daten/preise/wimpernverlaengerung-schulung.csv)
+- [Preise Wimpernlifting (CSV)](https://beautykursfinder.de/daten/preise/wimpernlifting-schulung.csv)
+- [Preise Permanent Make-up (CSV)](https://beautykursfinder.de/daten/preise/permanent-make-up-schulung.csv)
+- [Preise Microblading (CSV)](https://beautykursfinder.de/daten/preise/microblading-schulung.csv)
+
+## Methodik
+- [So entstehen unsere Daten](https://beautykursfinder.de/methodik/)
