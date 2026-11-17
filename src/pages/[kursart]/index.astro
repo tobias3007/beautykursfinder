@@ -1,0 +1,21 @@
+---
+import Base from '../../layouts/Base.astro';
+import { kursarten, imAngebot, stadtSeiten, preise, preisStat, eur, datum, datenstand, staedte, imAngebotStadt, MIN } from '../../lib/daten.js';
+export function getStaticPaths() { return kursarten.map((k) => ({ params: { kursart: k.slug }, props: { k } })); }
+const { k } = Astro.props;
+const liste = imAngebot(k.id);
+const nSt = new Set(liste.map((a) => a.stadt.wert)).size;
+const s = preisStat(preise(k.id));
+const stadtMit = stadtSeiten.filter((x) => x.kursart.id === k.id);
+const ohne = staedte.map((st) => ({ st, n: imAngebotStadt(k.id, st.name).length })).filter((x) => x.n > 0 && x.n < MIN);
+const titel = `${k.name}-Schulung: ${liste.length} Anbieter vergleichen`;
+const itemList = stadtMit.length >= 3 ? [{ '@context': 'https://schema.org', '@type': 'ItemList', name: `${k.name}-Schulung nach Stadt`, itemListElement: stadtMit.map((x, i) => ({ '@type': 'ListItem', position: i + 1, url: new URL(`/${k.slug}/${x.stadt.slug}/`, Astro.site).href, name: `${k.name}-Schulung in ${x.stadt.name}` })) }] : [];
+---
+<Base titel={titel} beschreibung={`${liste.length} Anbieter für ${k.name}-Schulungen in ${nSt} Städten${s ? `, Preise von ${eur(s.min)} bis ${eur(s.max)}` : ''}. Stand ${datum(datenstand)}.`} krumen={[{ name: `${k.name}-Schulung`, href: `/${k.slug}/` }]} jsonld={itemList}>
+  <h1>{k.name}-Schulung in Deutschland</h1>
+  <p class="antwort">{liste.length} Anbieter in {nSt} Städten bieten laut ihren Webseiten eine {k.name}-Schulung an.{s ? ` ${s.n} von ihnen nennen einen Preis, er liegt zwischen ${eur(s.min)} und ${eur(s.max)}.` : ' Preise nennt bisher kein Anbieter in unserer Erhebung.'} Stand {datum(datenstand)}.</p>
+  <h2>Städte mit mindestens {MIN} Anbietern</h2>
+  <ul class="raster">{stadtMit.map((x) => <li><a href={`/${k.slug}/${x.stadt.slug}/`}>{x.stadt.name}</a> ({x.liste.length})</li>)}</ul>
+  {ohne.length > 0 && <><h2>Städte mit weniger als {MIN} erfassten Anbietern</h2><ul>{ohne.map((x) => <li>{x.st.name}: {imAngebotStadt(k.id, x.st.name).map((a, i) => <>{i > 0 && ', '}<a href={`/anbieter/${a.id}/`}>{a.name.wert}</a></>)}</li>)}</ul></>}
+  <p><a href={`/preise/${k.slug}/`}>Preisübersicht {k.name}-Schulung mit Datensatz zum Herunterladen</a></p>
+</Base>

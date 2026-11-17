@@ -1,0 +1,33 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { anbieter, hatSubstanz, mailEintrag, auf, preisText, feldWert, datum, datenstand, kursarten, stadtSeiten } from '../../../lib/daten.js';
+export function getStaticPaths() { return anbieter.map((a) => ({ params: { id: a.id }, props: { a } })); }
+const { a } = Astro.props;
+const stadtName = a.stadt.wert;
+const voll = `${a.name.wert}, ${stadtName}`;
+const titel = voll.length <= 60 ? voll : voll.slice(0, 59).replace(/\s+\S*$/, '') + '…';
+const arten = a.kurse.map((k) => k.def.name);
+const krumen = [];
+const erste = a.kurse[0];
+const sSeite = stadtSeiten.find((x) => x.kursart.id === erste.kursart && x.stadt.name === stadtName);
+if (sSeite) krumen.push({ name: `${erste.def.name}-Schulung`, href: `/${erste.def.slug}/` }, { name: stadtName, href: `/${erste.def.slug}/${sSeite.stadt.slug}/` });
+else krumen.push({ name: `${erste.def.name}-Schulung`, href: `/${erste.def.slug}/` });
+krumen.push({ name: a.name.wert, href: `/anbieter/${a.id}/` });
+const tel = feldWert(a.telefon);
+const lb = { '@context': 'https://schema.org', '@type': 'LocalBusiness', name: a.name.wert, url: a.webseite.wert, address: { '@type': 'PostalAddress', addressLocality: stadtName, addressCountry: 'DE' }, ...(tel ? { telephone: tel } : {}) };
+const gepr = a.name.geprueft;
+---
+<Base titel={titel} beschreibung={`${a.name.wert} in ${stadtName} bietet laut eigener Webseite Schulungen zu ${arten.join(', ')} an. Preis, Dauer und Zertifikat mit Quelle, Stand ${datum(gepr)}.`} noindex={!hatSubstanz(a)} krumen={krumen} jsonld={[lb]} stand={false}>
+  <h1>{a.name.wert}, {stadtName}</h1>
+  <p class="antwort">{a.name.wert} in {stadtName} bietet laut der eigenen Webseite Schulungen zu {arten.join(', ')} an. Die Angaben unten stammen von dieser Webseite, geprüft am {datum(gepr)}. Fehlendes heißt „auf Anfrage“.</p>
+  <p>
+    Webseite: <a class={`plausible-event-name=Klick+Webseite plausible-event-anbieter=${a.id}`} href={a.webseite.wert} rel="noopener" target="_blank">{a.webseite.wert.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}</a><br />
+    Telefon: {tel ? <a class={`plausible-event-name=Klick+Telefon plausible-event-anbieter=${a.id}`} href={`tel:${tel.replace(/[^\d+]/g, '')}`}>{tel}</a> : 'auf Anfrage'}
+  </p>
+  <table>
+    <thead><tr><th>Kursart</th><th>Preis</th><th>Dauer</th><th>Gruppe</th><th>Zertifikat</th><th>Termine</th></tr></thead>
+    <tbody>{a.kurse.map((k) => <tr><th scope="row">{k.def.name}</th><td>{preisText(k.preis)}</td><td>{auf(k.dauer)}</td><td>{auf(k.gruppengroesse, (n) => `max. ${n}`)}</td><td>{feldWert(k.zertifikat) ? 'laut Anbieter' : 'auf Anfrage'}</td><td>auf Anfrage</td></tr>)}</tbody>
+  </table>
+  <p class="stand">Quelle: <a href={a.name.quelle} rel="noopener">Webseite des Anbieters</a>, geprüft am {datum(gepr)}. Preise wie vom Anbieter genannt, Angaben zur Mehrwertsteuer siehe dort.</p>
+  <p><a href={mailEintrag(a)}>Eintrag ändern oder übernehmen</a> (öffnet eine vorbefüllte E-Mail)</p>
+</Base>

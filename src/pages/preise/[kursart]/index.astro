@@ -1,0 +1,19 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { kursarten, preise, preisStat, eur, datum, datenstand, preisText, feldWert, config } from '../../../lib/daten.js';
+export function getStaticPaths() { return kursarten.map((k) => ({ params: { kursart: k.slug }, props: { k } })); }
+const { k } = Astro.props;
+const liste = preise(k.id).sort((x, y) => feldWert(x.k.preis).min - feldWert(y.k.preis).min);
+const s = preisStat(liste);
+const csv = `/daten/preise/${k.slug}.csv`;
+const ds = { '@context': 'https://schema.org', '@type': 'Dataset', name: `Preise für ${k.name}-Schulungen in Deutschland`, description: `Preise von ${liste.length} Anbietern für ${k.name}-Schulungen, wie auf deren Webseiten genannt, mit Quelle und Prüfdatum.`, url: new URL(`/preise/${k.slug}/`, Astro.site).href, dateModified: datenstand, inLanguage: 'de', creator: { '@type': 'Organization', name: 'neolime GmbH' }, license: 'https://creativecommons.org/licenses/by/4.0/', distribution: [{ '@type': 'DataDownload', encodingFormat: 'text/csv', contentUrl: new URL(csv, Astro.site).href }] };
+---
+<Base titel={`Preise ${k.name}-Schulung: ${s ? `${eur(s.min)} bis ${eur(s.max)}` : 'Übersicht'}`} beschreibung={`Preise für ${k.name}-Schulungen von ${liste.length} Anbietern in Deutschland${s ? `, ${eur(s.min)} bis ${eur(s.max)}` : ''}. Datenstand ${datum(datenstand)}, als CSV herunterladbar.`} krumen={[{ name: `${k.name}-Schulung`, href: `/${k.slug}/` }, { name: 'Preise', href: `/preise/${k.slug}/` }]} jsonld={[ds]}>
+  <h1>Preise für {k.name}-Schulungen</h1>
+  <p class="antwort">{s ? `${s.n} Anbieter nennen auf ihrer Webseite einen Preis für eine ${k.name}-Schulung. Die Preise liegen zwischen ${eur(s.min)} und ${eur(s.max)}.` : 'Kein Anbieter nennt bisher einen Preis.'} Datenstand {datum(datenstand)}. Die Preise stehen so da, wie der Anbieter sie nennt, ohne Umrechnung zwischen brutto und netto.</p>
+  <p><a href={csv} download>Datensatz als CSV herunterladen</a> (Lizenz CC BY 4.0, Quelle: {config.domain})</p>
+  <table>
+    <thead><tr><th>Anbieter</th><th>Stadt</th><th>Preis</th><th>Quelle</th><th>Geprüft</th></tr></thead>
+    <tbody>{liste.map(({ a, k: c }) => <tr><th scope="row"><a href={`/anbieter/${a.id}/`}>{a.name.wert}</a></th><td>{a.stadt.wert}</td><td>{preisText(c.preis)}</td><td><a href={c.preis.quelle} rel="noopener">Seite</a></td><td>{datum(c.preis.geprueft)}</td></tr>)}</tbody>
+  </table>
+</Base>

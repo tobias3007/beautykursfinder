@@ -5,13 +5,223 @@
   "name": "Beautykursfinder",
   "waehrung": "EUR",
   "waehrungssymbol": "€",
-  "kontakt": { "email": "office@neolime.io" },
+  "kontakt": {
+    "email": "office@neolime.io"
+  },
   "kursarten": [
-    { "id": "wimpernverlaengerung", "slug": "wimpernverlaengerung-schulung", "name": "Wimpernverlängerung" },
-    { "id": "wimpernlifting", "slug": "wimpernlifting-schulung", "name": "Wimpernlifting" },
-    { "id": "permanent-make-up", "slug": "permanent-make-up-schulung", "name": "Permanent Make-up" },
-    { "id": "microblading", "slug": "microblading-schulung", "name": "Microblading" }
+    {
+      "id": "wimpernverlaengerung",
+      "slug": "wimpernverlaengerung-schulung",
+      "name": "Wimpernverlängerung"
+    },
+    {
+      "id": "wimpernlifting",
+      "slug": "wimpernlifting-schulung",
+      "name": "Wimpernlifting"
+    },
+    {
+      "id": "permanent-make-up",
+      "slug": "permanent-make-up-schulung",
+      "name": "Permanent Make-up"
+    },
+    {
+      "id": "microblading",
+      "slug": "microblading-schulung",
+      "name": "Microblading"
+    }
   ],
-  "staedte": [],
-  "mindestanbieter_stadtseite": 3
+  "staedte": [
+    {
+      "name": "Berlin",
+      "slug": "berlin",
+      "einwohner": 3700577
+    },
+    {
+      "name": "Hamburg",
+      "slug": "hamburg",
+      "einwohner": 1869473
+    },
+    {
+      "name": "Frankfurt am Main",
+      "slug": "frankfurt-am-main",
+      "einwohner": 760656
+    },
+    {
+      "name": "Leipzig",
+      "slug": "leipzig",
+      "einwohner": 615932
+    },
+    {
+      "name": "Stuttgart",
+      "slug": "stuttgart",
+      "einwohner": 609365
+    },
+    {
+      "name": "Dortmund",
+      "slug": "dortmund",
+      "einwohner": 600880
+    },
+    {
+      "name": "Bremen",
+      "slug": "bremen",
+      "einwohner": 588413
+    },
+    {
+      "name": "Essen",
+      "slug": "essen",
+      "einwohner": 573618
+    },
+    {
+      "name": "Dresden",
+      "slug": "dresden",
+      "einwohner": 562764
+    },
+    {
+      "name": "Duisburg",
+      "slug": "duisburg",
+      "einwohner": 500810
+    },
+    {
+      "name": "Bochum",
+      "slug": "bochum",
+      "einwohner": 358880
+    },
+    {
+      "name": "Wuppertal",
+      "slug": "wuppertal",
+      "einwohner": 357243
+    },
+    {
+      "name": "Bielefeld",
+      "slug": "bielefeld",
+      "einwohner": 331419
+    },
+    {
+      "name": "Bonn",
+      "slug": "bonn",
+      "einwohner": 323587
+    },
+    {
+      "name": "Mannheim",
+      "slug": "mannheim",
+      "einwohner": 319536
+    },
+    {
+      "name": "Karlsruhe",
+      "slug": "karlsruhe",
+      "einwohner": 309247
+    },
+    {
+      "name": "Augsburg",
+      "slug": "augsburg",
+      "einwohner": 301786
+    },
+    {
+      "name": "Wiesbaden",
+      "slug": "wiesbaden",
+      "einwohner": 288584
+    },
+    {
+      "name": "Gelsenkirchen",
+      "slug": "gelsenkirchen",
+      "einwohner": 266199
+    },
+    {
+      "name": "Aachen",
+      "slug": "aachen",
+      "einwohner": 263703
+    },
+    {
+      "name": "Braunschweig",
+      "slug": "braunschweig",
+      "einwohner": 252811
+    },
+    {
+      "name": "Kiel",
+      "slug": "kiel",
+      "einwohner": 251842
+    },
+    {
+      "name": "Magdeburg",
+      "slug": "magdeburg",
+      "einwohner": 244494
+    },
+    {
+      "name": "Freiburg im Breisgau",
+      "slug": "freiburg-im-breisgau",
+      "einwohner": 238299
+    },
+    {
+      "name": "Krefeld",
+      "slug": "krefeld",
+      "einwohner": 230738
+    },
+    {
+      "name": "Halle (Saale)",
+      "slug": "halle-saale",
+      "einwohner": 226186
+    },
+    {
+      "name": "Mainz",
+      "slug": "mainz",
+      "einwohner": 223888
+    },
+    {
+      "name": "Erfurt",
+      "slug": "erfurt",
+      "einwohner": 217159
+    },
+    {
+      "name": "Oberhausen",
+      "slug": "oberhausen",
+      "einwohner": 213178
+    },
+    {
+      "name": "Rostock",
+      "slug": "rostock",
+      "einwohner": 204929
+    },
+    {
+      "name": "München",
+      "slug": "muenchen",
+      "einwohner": 1505036
+    },
+    {
+      "name": "Köln",
+      "slug": "koeln",
+      "einwohner": 1025523
+    },
+    {
+      "name": "Nürnberg",
+      "slug": "nuernberg",
+      "einwohner": 531159
+    },
+    {
+      "name": "Hannover",
+      "slug": "hannover",
+      "einwohner": 522803
+    },
+    {
+      "name": "Düsseldorf",
+      "slug": "duesseldorf",
+      "einwohner": 619444
+    },
+    {
+      "name": "Münster",
+      "slug": "muenster",
+      "einwohner": 306368
+    },
+    {
+      "name": "Mönchengladbach",
+      "slug": "moenchengladbach",
+      "einwohner": 267176
+    },
+    {
+      "name": "Lübeck",
+      "slug": "luebeck",
+      "einwohner": 217061
+    }
+  ],
+  "mindestanbieter_stadtseite": 3,
+  "staedte_quelle": "de.wikipedia.org, Liste der Groß- und Mittelstädte in Deutschland, Stand 31.12.2025"
 }

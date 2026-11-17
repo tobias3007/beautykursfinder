@@ -1,8 +1,16 @@
 ---
 import Base from '../layouts/Base.astro';
-import land from '../config/land.json';
+import { anbieter, kursarten, stadtSeiten, staedte, preise, preisStat, eur, datum, datenstand, imAngebot } from '../lib/daten.js';
+const nStadt = new Set(anbieter.map((a) => a.stadt.wert)).size;
 ---
-<Base titel="Beauty-Schulungen vergleichen | Beautykursfinder" beschreibung="Platzhalter, wird mit Daten gefüllt.">
-  <h1>Beauty-Schulungen in Deutschland</h1>
-  <ul>{land.kursarten.map(k => <li><a href={`/${k.slug}/`}>{k.name}-Schulung</a></li>)}</ul>
+<Base titel="Beauty-Schulungen vergleichen | Beautykursfinder" beschreibung={`${anbieter.length} Anbieter von Wimpern-, PMU- und Microblading-Schulungen in ${nStadt} deutschen Großstädten mit Preisen, Datenstand ${datum(datenstand)}.`} stand={true}>
+  <h1>Beauty-Schulungen in deutschen Großstädten vergleichen</h1>
+  <p class="antwort">Wir haben {anbieter.length} Anbieter von Schulungen zu Wimpernverlängerung, Wimpernlifting, Permanent Make-up und Microblading in {nStadt} Städten erfasst. Alle Angaben stammen von den Webseiten der Anbieter, Stand {datum(datenstand)}. Was ein Anbieter nicht nennt, steht als „auf Anfrage“ da.</p>
+  <h2>Kursarten</h2>
+  <ul class="raster">{kursarten.map((k) => { const s = preisStat(preise(k.id)); return <li><a href={`/${k.slug}/`}>{k.name}-Schulung</a><br /><span class="stand">{imAngebot(k.id).length} Anbieter{s ? `, Preise ${eur(s.min)} bis ${eur(s.max)}` : ''}</span></li>; })}</ul>
+  <h2>Preisübersichten</h2>
+  <ul>{kursarten.map((k) => <li><a href={`/preise/${k.slug}/`}>Preise für {k.name}-Schulungen</a></li>)}</ul>
+  <h2>Schulungen nach Stadt</h2>
+  <ul class="raster">{[...new Set(stadtSeiten.map((x) => x.stadt.slug))].map((sl) => { const s = staedte.find((x) => x.slug === sl); return <li>{s.name}: {stadtSeiten.filter((x) => x.stadt.slug === sl).map((x, i) => <><a href={`/${x.kursart.slug}/${sl}/`}>{x.kursart.name.replace('Wimpernverlängerung','Wimpern').replace('Permanent Make-up','PMU')}</a>{' '}</>)}</li>; })}</ul>
+  <p>Du bist Anbieter? <a href="/methodik/">So entstehen unsere Daten</a> und wie du einen Eintrag änderst.</p>
 </Base>

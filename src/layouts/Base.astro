@@ -1,7 +1,17 @@
 ---
 import land from '../config/land.json';
-const { titel, beschreibung, noindex = false, pfad = Astro.url.pathname } = Astro.props;
-const canonical = new URL(pfad, Astro.site).href;
+import { datenstand, datum, kursarten } from '../lib/daten.js';
+const { titel, beschreibung, noindex = false, krumen = [], jsonld = [], stand = true } = Astro.props;
+if (titel.length > 60) throw new Error(`Titel zu lang (${titel.length}): ${titel}`);
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const site = Astro.site.origin;
+const alle = [
+  { '@context': 'https://schema.org', '@type': 'Organization', name: 'neolime GmbH', url: site + '/', email: land.kontakt.email },
+  { '@context': 'https://schema.org', '@type': 'WebSite', name: land.name, url: site + '/', inLanguage: land.sprache },
+  ...(krumen.length ? [{ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: krumen.map((k, i) => ({ '@type': 'ListItem', position: i + 1, name: k.name, item: new URL(k.href, site).href })) }] : []),
+  ...jsonld,
+];
+const plausible = import.meta.env.PLAUSIBLE_DOMAIN;
 ---
 <!doctype html>
 <html lang={land.sprache}>
@@ -12,15 +22,36 @@ const canonical = new URL(pfad, Astro.site).href;
   <meta name="description" content={beschreibung} />
   <link rel="canonical" href={canonical} />
   {noindex && <meta name="robots" content="noindex, follow" />}
+  {alle.map((j) => <script type="application/ld+json" set:html={JSON.stringify(j)} />)}
+  {plausible && <script defer data-domain={plausible} src="https://plausible.io/js/script.tagged-events.js"></script>}
   <style>
-    body{font:16px/1.55 system-ui,sans-serif;color:#1d2330;margin:0;background:#fff}
-    main,header,footer{max-width:60rem;margin:0 auto;padding:1rem}
-    a{color:#0b5cad} footer{border-top:1px solid #dde2ea;font-size:.9rem;color:#4a5568}
+    :root{--t:#1d2330;--m:#4a5568;--l:#dde2ea;--a:#0b5cad;--bg:#fff;--s:#f5f7fa}
+    *{box-sizing:border-box}
+    body{font:16px/1.6 system-ui,-apple-system,sans-serif;color:var(--t);margin:0;background:var(--bg)}
+    .w{max-width:62rem;margin:0 auto;padding:0 1rem}
+    header{border-bottom:1px solid var(--l)} header .w{display:flex;gap:1.2rem;flex-wrap:wrap;align-items:baseline;padding:.8rem 1rem}
+    header a.logo{font-weight:700;color:var(--t);text-decoration:none}
+    nav.krumen{font-size:.9rem;color:var(--m);padding:.8rem 0 0}
+    nav.krumen a{color:var(--m)}
+    a{color:var(--a)} h1{font-size:1.7rem;line-height:1.25;margin:.8rem 0} h2{font-size:1.25rem;margin:2rem 0 .6rem}
+    .antwort{font-size:1.1rem;background:var(--s);padding:.9rem 1rem;border-left:4px solid var(--a);margin:1rem 0}
+    table{border-collapse:collapse;width:100%;font-size:.95rem;display:block;overflow-x:auto}
+    th,td{border-bottom:1px solid var(--l);padding:.5rem .6rem;text-align:left;vertical-align:top}
+    th{background:var(--s)} .stand{color:var(--m);font-size:.9rem}
+    ul.raster{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(14rem,1fr));gap:.4rem .8rem}
+    footer{border-top:1px solid var(--l);margin-top:3rem;padding:1.2rem 0;font-size:.9rem;color:var(--m)}
+    footer a{color:var(--m)}
   </style>
 </head>
 <body>
-  <header><a href="/">{land.name}</a></header>
-  <main><slot /></main>
-  <footer><a href="/methodik/">So entstehen unsere Daten</a> · <a href="/impressum/">Impressum</a> · <a href="/datenschutz/">Datenschutz</a></footer>
+  <header><div class="w"><a class="logo" href="/">{land.name}</a>
+    {kursarten.map((k) => <a href={`/${k.slug}/`}>{k.name}</a>)}
+    <a href="/methodik/">Methodik</a></div></header>
+  <main class="w">
+    {krumen.length > 0 && <nav class="krumen" aria-label="Brotkrumen"><a href="/">Start</a>{krumen.map((k, i) => <>{' › '}{i < krumen.length - 1 ? <a href={k.href}>{k.name}</a> : <span>{k.name}</span>}</>)}</nav>}
+    <slot />
+    {stand && <p class="stand">Zuletzt geprüft am {datum(datenstand)}.</p>}
+  </main>
+  <footer><div class="w"><a href="/methodik/">So entstehen unsere Daten</a> · <a href="/impressum/">Impressum</a> · <a href="/datenschutz/">Datenschutz</a></div></footer>
 </body>
 </html>
