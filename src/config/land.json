@@ -1,0 +1,17 @@
+{
+  "land": "DE",
+  "sprache": "de",
+  "domain": "beautykursfinder.de",
+  "name": "Beautykursfinder",
+  "waehrung": "EUR",
+  "waehrungssymbol": "€",
+  "kontakt": { "email": "office@neolime.io" },
+  "kursarten": [
+    { "id": "wimpernverlaengerung", "slug": "wimpernverlaengerung-schulung", "name": "Wimpernverlängerung" },
+    { "id": "wimpernlifting", "slug": "wimpernlifting-schulung", "name": "Wimpernlifting" },
+    { "id": "permanent-make-up", "slug": "permanent-make-up-schulung", "name": "Permanent Make-up" },
+    { "id": "microblading", "slug": "microblading-schulung", "name": "Microblading" }
+  ],
+  "staedte": [],
+  "mindestanbieter_stadtseite": 3
+}

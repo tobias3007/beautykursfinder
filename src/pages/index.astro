@@ -1,0 +1,8 @@
+---
+import Base from '../layouts/Base.astro';
+import land from '../config/land.json';
+---
+<Base titel="Beauty-Schulungen vergleichen | Beautykursfinder" beschreibung="Platzhalter, wird mit Daten gefüllt.">
+  <h1>Beauty-Schulungen in Deutschland</h1>
+  <ul>{land.kursarten.map(k => <li><a href={`/${k.slug}/`}>{k.name}-Schulung</a></li>)}</ul>
+</Base>
