@@ -12,7 +12,7 @@ const titel = `${k.name}-Schulung: ${liste.length} Anbieter vergleichen`;
 const itemList = stadtMit.length >= 3 ? [{ '@context': 'https://schema.org', '@type': 'ItemList', name: `${k.name}-Schulung nach Stadt`, itemListElement: stadtMit.map((x, i) => ({ '@type': 'ListItem', position: i + 1, url: new URL(`/${k.slug}/${x.stadt.slug}/`, Astro.site).href, name: `${k.name}-Schulung in ${x.stadt.name}` })) }] : [];
 ---
 <Base titel={titel} beschreibung={`${liste.length} Anbieter für ${k.name}-Schulungen in ${nSt} Städten${s ? `, Preise von ${eur(s.min)} bis ${eur(s.max)}` : ''}. Stand ${datum(datenstand)}.`} krumen={[{ name: `${k.name}-Schulung`, href: `/${k.slug}/` }]} jsonld={itemList}>
-  <h1>{k.name}-Schulung in Deutschland</h1>
+  <h1 class="mitbild"><img src={`/img/kursart-${k.id}.svg`} width="56" height="56" alt="" decoding="async" /><span>{k.name}-Schulung in Deutschland</span></h1>
   <p class="antwort">{liste.length} Anbieter in {nSt} Städten bieten laut ihren Webseiten eine {k.name}-Schulung an.{s ? ` ${s.n} von ihnen nennen einen Preis, er liegt zwischen ${eur(s.min)} und ${eur(s.max)}, der mittlere Einstiegspreis liegt bei ${eur(s.median)}.` : ' Preise nennt bisher kein Anbieter in unserer Erhebung.'} Stand {datum(datenstand)}.</p>
   <div class="zahlen">
     <div class="zahl"><b>{liste.length}</b><span>Anbieter in {nSt} Städten</span></div>

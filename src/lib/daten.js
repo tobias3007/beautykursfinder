@@ -82,3 +82,5 @@ export const anbieterLink = (a, kampagne, kontext) => {
   u.searchParams.set('utm_content', kontext);
   return u.href;
 };
+
+export const termineText = (f) => { const w = feldWert(f); return w && w.length ? w.slice(0, 3).map(datum).join(', ') : null; };

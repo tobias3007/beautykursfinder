@@ -1,6 +1,6 @@
 ---
 import Base from '../../../layouts/Base.astro';
-import { anbieterLink, anbieter, hatSubstanz, mailEintrag, auf, preisText, feldWert, datum, datenstand, kursarten, stadtSeiten } from '../../../lib/daten.js';
+import { termineText, anbieterLink, anbieter, hatSubstanz, mailEintrag, auf, preisText, feldWert, datum, datenstand, kursarten, stadtSeiten } from '../../../lib/daten.js';
 export function getStaticPaths() { return anbieter.map((a) => ({ params: { id: a.id }, props: { a } })); }
 const { a } = Astro.props;
 const stadtName = a.stadt.wert;
@@ -26,7 +26,7 @@ const gepr = a.name.geprueft;
   </div>
   <table>
     <thead><tr><th>Kursart</th><th>Preis</th><th>Dauer</th><th>Gruppe</th><th>Zertifikat</th><th>Termine</th></tr></thead>
-    <tbody>{a.kurse.map((k) => <tr><th scope="row">{k.def.name}</th><td>{preisText(k.preis)}</td><td>{auf(k.dauer)}</td><td>{auf(k.gruppengroesse, (n) => `max. ${n}`)}</td><td>{feldWert(k.zertifikat) ? 'laut Anbieter' : 'auf Anfrage'}</td><td>auf Anfrage</td></tr>)}</tbody>
+    <tbody>{a.kurse.map((k) => <tr><th scope="row">{k.def.name}</th><td>{preisText(k.preis)}</td><td>{auf(k.dauer)}</td><td>{auf(k.gruppengroesse, (n) => `max. ${n}`)}</td><td>{feldWert(k.zertifikat) ? 'laut Anbieter' : 'auf Anfrage'}</td><td>{termineText(k.termine) ?? 'auf Anfrage'}</td></tr>)}</tbody>
   </table>
   <p class="stand">Quelle: <a href={a.name.quelle} rel="noopener">Webseite des Anbieters</a>, geprüft am {datum(gepr)}. Preise wie vom Anbieter genannt, Angaben zur Mehrwertsteuer siehe dort.</p>
   <p><a href={mailEintrag(a)}>Eintrag ändern oder übernehmen</a> (öffnet eine vorbefüllte E-Mail)</p>

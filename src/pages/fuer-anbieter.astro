@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import { anbieter, kursarten, config } from '../lib/daten.js';
+const beispiel = `<a href="https://${config.domain}/anbieter/IHRE-ID/"><img src="https://${config.domain}/badge/gelistet.svg" width="220" height="56" alt="Gelistet bei Beautykursfinder"></a>`;
+---
+<Base titel="Für Anbieter: Eintrag ändern oder übernehmen" beschreibung={`So ändern oder übernehmen Anbieter von Beauty-Schulungen ihren Eintrag auf ${config.name}. Kostenlos, Angaben nur von der eigenen Webseite.`} krumen={[{ name: 'Für Anbieter', href: '/fuer-anbieter/' }]}>
+  <h1>Für Anbieter von Beauty-Schulungen</h1>
+  <p class="antwort">Ihr Studio oder Ihre Akademie steht vielleicht schon bei uns: Wir haben {anbieter.length} Anbieter in deutschen Großstädten erfasst, ausschließlich nach den Angaben auf deren eigenen Webseiten. Sie können Ihren Eintrag jederzeit korrigieren oder ergänzen lassen. Das kostet nichts.</p>
+  <h2>Was Sie tun können</h2>
+  <ul>
+    <li><strong>Eintrag korrigieren:</strong> Stimmt ein Preis, eine Dauer oder eine Telefonnummer nicht mehr, schreiben Sie uns die Änderung. Wir passen sie an und nennen Ihre Webseite als Quelle.</li>
+    <li><strong>Angaben ergänzen:</strong> Termine, Gruppengröße, Preis und Zertifikat stehen oft nirgends. Wenn Sie sie auf Ihrer Webseite veröffentlichen, übernehmen wir sie dort.</li>
+    <li><strong>Eintrag übernehmen oder entfernen lassen:</strong> Auf jedem Profil steht der Link „Eintrag ändern oder übernehmen“, der eine vorbefüllte E-Mail öffnet.</li>
+  </ul>
+  <p><a class="btn" href="mailto:office@neolime.io?subject=Eintrag%20%C3%A4ndern%20oder%20%C3%BCbernehmen&body=Guten%20Tag%2C%0A%0Aunser%20Studio%3A%20%0AStadt%3A%20%0AWebseite%3A%20%0A%0AAnliegen%3A%20">Eintrag ändern oder übernehmen</a></p>
+  <h2>Was wir zeigen und wie</h2>
+  <p>Wir zeigen Name, Ort, Kursarten, Preis, Dauer, Gruppengröße, Zertifikat, Termine, Webseite und Telefon, jeweils mit Quelle und Prüfdatum. Fehlt eine Angabe auf Ihrer Webseite, steht dort „auf Anfrage“, wir schätzen nichts. Wir übernehmen keine Texte oder Bewertungen von anderen Portalen. Mehr dazu: <a href="/methodik/">So entstehen unsere Daten</a>.</p>
+  <p>Besucher gelangen von uns auf Ihre Webseite. Die Links tragen Parameter (<code>utm_source=beautykursfinder.de</code>), sodass Sie die Herkunft in Ihrer Statistik sehen.</p>
+  <h2>Badge für Ihre Webseite</h2>
+  <p>Wenn Sie möchten, können Sie auf Ihrer Webseite zeigen, dass Sie bei uns gelistet sind. Ersetzen Sie <code>IHRE-ID</code> durch die Adresse Ihres Profils (zu finden im Link Ihres Eintrags).</p>
+  <img src="/badge/gelistet.svg" width="220" height="56" alt="Gelistet bei Beautykursfinder" />
+  <pre style="overflow-x:auto;background:var(--s);padding:.8rem 1rem;border-radius:var(--r);font-size:.85rem">{beispiel}</pre>
+  <p class="stand">Das Badge ist keine Bewertung und kein Gütesiegel. Es sagt nur, dass Sie in unserem Verzeichnis stehen.</p>
+</Base>

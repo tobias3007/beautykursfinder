@@ -1,0 +1,30 @@
+---
+import Base from '../../layouts/Base.astro';
+import { anbieter, kursarten, preise, preisStat, eur, datum, datenstand, feldWert, config } from '../../lib/daten.js';
+const nStadt = new Set(anbieter.map((a) => a.stadt.wert)).size;
+const mitPreis = anbieter.filter((a) => a.kurse.some((k) => feldWert(k.preis) !== null)).length;
+const zeilen = kursarten.map((k) => { const l = preise(k.id); return { k, s: preisStat(l), n: l.length }; });
+const nKurse = anbieter.reduce((n, a) => n + a.kurse.length, 0);
+const nPreise = zeilen.reduce((n, z) => n + z.n, 0);
+const jahr = datenstand.slice(0, 4);
+const teuer = [...zeilen].filter((z) => z.s).sort((a, b) => b.s.median - a.s.median)[0];
+const guenstig = [...zeilen].filter((z) => z.s).sort((a, b) => a.s.median - b.s.median)[0];
+const titel = `Preisreport ${jahr}: Beauty-Schulungen in Deutschland`;
+---
+<Base titel={titel} beschreibung={`Was kosten Schulungen für Wimpern, Lifting, PMU und Microblading? ${nPreise} Preise von ${mitPreis} Anbietern, Stand ${datum(datenstand)}, mit Datensatz.`} krumen={[{ name: 'Preisreport', href: '/preisreport/' }]}>
+  <h1>Preisreport {jahr}: Was kosten Beauty-Schulungen in Deutschland?</h1>
+  <p class="antwort">{guenstig && teuer && `Der mittlere Einstiegspreis liegt bei ${eur(guenstig.s.median)} für ${guenstig.k.name} und bei ${eur(teuer.s.median)} für ${teuer.k.name}. `}Das ist der Median der niedrigsten Kurspreise, die bei {mitPreis} von {anbieter.length} erfassten Anbietern in {nStadt} Großstädten auf deren eigener Webseite stehen, Stand {datum(datenstand)}. Bei den übrigen {anbieter.length - mitPreis} Anbietern haben wir dort keinen Preis gefunden.</p>
+  <table>
+    <thead><tr><th>Kursart</th><th>Preise erfasst</th><th>Niedrigster</th><th>Median</th><th>Höchster</th><th>Daten</th></tr></thead>
+    <tbody>{zeilen.map(({ k, s, n }) => <tr><th scope="row"><a href={`/preise/${k.slug}/`}>{k.name}</a></th><td>{n}</td><td>{s ? eur(s.min) : '–'}</td><td>{s ? eur(s.median) : '–'}</td><td>{s ? eur(s.max) : '–'}</td><td><a href={`/daten/preise/${k.slug}.csv`}>CSV</a></td></tr>)}</tbody>
+  </table>
+  <h2>So lesen Sie die Zahlen</h2>
+  <ul>
+    <li><strong>Median:</strong> die Hälfte der erfassten Anbieter verlangt für ihren günstigsten Kurs dieser Art weniger, die andere Hälfte mehr.</li>
+    <li><strong>Brutto oder netto:</strong> Anbieter nennen Preise uneinheitlich, einige zuzüglich Mehrwertsteuer. Wir rechnen nichts um und zeigen die Angabe, wo sie steht.</li>
+    <li><strong>Umfang:</strong> Es stehen {nPreise} Preise für {nKurse} erfasste Kurse. Die Zahlen beschreiben die Anbieter, die einen Preis veröffentlichen, nicht den ganzen Markt.</li>
+    <li><strong>Material:</strong> Starterpaket-, Behandlungs- und Aktionspreise zählen nicht, nur der Preis der Schulung selbst.</li>
+  </ul>
+  <h2>Quelle und Zitieren</h2>
+  <p>Jeder Preis hat in den Datensätzen Quelle und Prüfdatum. Die Daten stehen unter CC BY 4.0: Sie dürfen sie mit Nennung von „{config.name}, {config.domain}, Stand {datum(datenstand)}“ verwenden. Wie die Daten entstehen, steht unter <a href="/methodik/">So entstehen unsere Daten</a>.</p>
+</Base>

@@ -5,6 +5,8 @@ import { hatSubstanz, stadtSeiten, preisStat, eur, datum, datenstand, feldWert, 
 export function getStaticPaths() { return stadtSeiten.map((x) => ({ params: { kursart: x.kursart.slug, stadt: x.stadt.slug }, props: x })); }
 const { kursart: k, stadt, liste } = Astro.props;
 const sortiert = sortiere(liste, k.id);
+const andereArten = stadtSeiten.filter((x) => x.stadt.slug === stadt.slug && x.kursart.id !== k.id);
+const andereStaedte = stadtSeiten.filter((x) => x.kursart.id === k.id && x.stadt.slug !== stadt.slug).sort((a, b) => b.liste.length - a.liste.length).slice(0, 8);
 const mitPreis = liste.map((a) => ({ a, k: kursVon(a, k.id) })).filter((x) => feldWert(x.k.preis));
 const s = preisStat(mitPreis);
 const titel = `${k.name}-Schulung ${stadt.name}: ${liste.length} Anbieter`;
@@ -23,5 +25,8 @@ const jl = [{ '@context': 'https://schema.org', '@type': 'ItemList', name: `${k.
     <label><input type="checkbox" id="f-zert" /> Nur mit Zertifikat</label>
   </div>
   <div class="karten">{sortiert.map((a) => <AnbieterKarte a={a} k={kursVon(a, k.id)} kontext={`stadt-${stadt.slug}`} />)}</div>
+  {andereArten.length > 0 && <><h2>Weitere Schulungen in {stadt.name}</h2><ul class="chips">{andereArten.map((x) => <li><a href={`/${x.kursart.slug}/${stadt.slug}/`}>{x.kursart.name} <small>({x.liste.length})</small></a></li>)}</ul></>}
+  <h2>{k.name} in anderen Städten</h2>
+  <ul class="chips">{andereStaedte.map((x) => <li><a href={`/${k.slug}/${x.stadt.slug}/`}>{x.stadt.name} <small>({x.liste.length})</small></a></li>)}</ul>
   <p class="stand">Preise so, wie der Anbieter sie nennt, brutto oder netto je nach Anbieter. „Zertifikat“ meint die Bescheinigung, die der Anbieter selbst nennt. <a href={`/preise/${k.slug}/`}>Preisübersicht {k.name}</a> · <a href={`/${k.slug}/`}>Alle Städte</a></p>
 </Base>

@@ -220,6 +220,11 @@
       "name": "Lübeck",
       "slug": "luebeck",
       "einwohner": 217061
+    },
+    {
+      "name": "Chemnitz",
+      "slug": "chemnitz",
+      "einwohner": 247252
     }
   ],
   "mindestanbieter_stadtseite": 3,
