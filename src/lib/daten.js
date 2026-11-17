@@ -24,7 +24,8 @@ export const auf = (f, fmt = (x) => String(x)) => (feldWert(f) !== null ? fmt(f.
 export const preisText = (f) => {
   const w = feldWert(f);
   if (!w) return 'auf Anfrage';
-  return w.min === w.max ? eur(w.min) : `${eur(w.min)} bis ${eur(w.max)}`;
+  const m = w.mwst === 'zzgl' ? ' zzgl. MwSt.' : w.mwst === 'inkl' ? ' inkl. MwSt.' : '';
+  return (w.min === w.max ? eur(w.min) : `${eur(w.min)} bis ${eur(w.max)}`) + m;
 };
 
 // Gesamtstand: spätestes Prüfdatum aller Felder
