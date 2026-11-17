@@ -6,16 +6,21 @@ const { k } = Astro.props;
 const liste = imAngebot(k.id);
 const nSt = new Set(liste.map((a) => a.stadt.wert)).size;
 const s = preisStat(preise(k.id));
-const stadtMit = stadtSeiten.filter((x) => x.kursart.id === k.id);
+const stadtMit = stadtSeiten.filter((x) => x.kursart.id === k.id).sort((a, b) => b.liste.length - a.liste.length);
 const ohne = staedte.map((st) => ({ st, n: imAngebotStadt(k.id, st.name).length })).filter((x) => x.n > 0 && x.n < MIN);
 const titel = `${k.name}-Schulung: ${liste.length} Anbieter vergleichen`;
 const itemList = stadtMit.length >= 3 ? [{ '@context': 'https://schema.org', '@type': 'ItemList', name: `${k.name}-Schulung nach Stadt`, itemListElement: stadtMit.map((x, i) => ({ '@type': 'ListItem', position: i + 1, url: new URL(`/${k.slug}/${x.stadt.slug}/`, Astro.site).href, name: `${k.name}-Schulung in ${x.stadt.name}` })) }] : [];
 ---
 <Base titel={titel} beschreibung={`${liste.length} Anbieter für ${k.name}-Schulungen in ${nSt} Städten${s ? `, Preise von ${eur(s.min)} bis ${eur(s.max)}` : ''}. Stand ${datum(datenstand)}.`} krumen={[{ name: `${k.name}-Schulung`, href: `/${k.slug}/` }]} jsonld={itemList}>
   <h1>{k.name}-Schulung in Deutschland</h1>
-  <p class="antwort">{liste.length} Anbieter in {nSt} Städten bieten laut ihren Webseiten eine {k.name}-Schulung an.{s ? ` ${s.n} von ihnen nennen einen Preis, er liegt zwischen ${eur(s.min)} und ${eur(s.max)}.` : ' Preise nennt bisher kein Anbieter in unserer Erhebung.'} Stand {datum(datenstand)}.</p>
-  <h2>Städte mit mindestens {MIN} Anbietern</h2>
-  <ul class="raster">{stadtMit.map((x) => <li><a href={`/${k.slug}/${x.stadt.slug}/`}>{x.stadt.name}</a> ({x.liste.length})</li>)}</ul>
+  <p class="antwort">{liste.length} Anbieter in {nSt} Städten bieten laut ihren Webseiten eine {k.name}-Schulung an.{s ? ` ${s.n} von ihnen nennen einen Preis, er liegt zwischen ${eur(s.min)} und ${eur(s.max)}, der mittlere Einstiegspreis liegt bei ${eur(s.median)}.` : ' Preise nennt bisher kein Anbieter in unserer Erhebung.'} Stand {datum(datenstand)}.</p>
+  <div class="zahlen">
+    <div class="zahl"><b>{liste.length}</b><span>Anbieter in {nSt} Städten</span></div>
+    {s && <div class="zahl"><b>{eur(s.min)} bis {eur(s.max)}</b><span>Preisspanne, {s.n} Anbieter nennen Preise</span></div>}
+    {s && <div class="zahl"><b>{eur(s.median)}</b><span>mittlerer Einstiegspreis (Median)</span></div>}
+  </div>
+  <h2>Stadt wählen</h2>
+  <ul class="chips">{stadtMit.map((x) => <li><a href={`/${k.slug}/${x.stadt.slug}/`}>{x.stadt.name} <small>({x.liste.length})</small></a></li>)}</ul>
+  <p><a class="btn" href={`/preise/${k.slug}/`}>Alle Preise mit Quelle und Download</a></p>
   {ohne.length > 0 && <><h2>Städte mit weniger als {MIN} erfassten Anbietern</h2><ul>{ohne.map((x) => <li>{x.st.name}: {imAngebotStadt(k.id, x.st.name).map((a, i) => <>{i > 0 && ', '}<a href={`/anbieter/${a.id}/`}>{a.name.wert}</a></>)}</li>)}</ul></>}
-  <p><a href={`/preise/${k.slug}/`}>Preisübersicht {k.name}-Schulung mit Datensatz zum Herunterladen</a></p>
 </Base>

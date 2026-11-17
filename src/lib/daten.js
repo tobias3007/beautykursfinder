@@ -44,7 +44,10 @@ export const preisStat = (liste) => {
   const alle = liste.flatMap((x) => [feldWert(x.k.preis).min, feldWert(x.k.preis).max]).sort((a, b) => a - b);
   if (!alle.length) return null;
   const mid = Math.floor(alle.length / 2);
-  return { min: alle[0], max: alle[alle.length - 1], n: liste.length };
+  const mins = liste.map((x) => feldWert(x.k.preis).min).sort((a, b) => a - b);
+  const h = Math.floor(mins.length / 2);
+  const median = mins.length % 2 ? mins[h] : Math.round((mins[h - 1] + mins[h]) / 2);
+  return { min: alle[0], max: alle[alle.length - 1], n: liste.length, median };
 };
 // Stadtseiten nur ab MIN Anbietern
 export const stadtSeiten = kursarten.flatMap((k) => staedte
@@ -57,3 +60,14 @@ export const mailEintrag = (a) => {
   const text = encodeURIComponent(`Guten Tag,\n\nich möchte den Eintrag zu "${a.name.wert}" in ${a.stadt.wert} (${config.domain}/anbieter/${a.id}/) ändern oder übernehmen.\n\nÄnderung:\n`);
   return `mailto:${config.kontakt.email}?subject=${betreff}&body=${text}`;
 };
+
+// Karten sortieren: erst mit Preis (aufsteigend), dann mit anderen Angaben, dann Rest nach Name
+export const sortiere = (liste, art) => [...liste].sort((x, y) => {
+  const kx = kursVon(x, art), ky = kursVon(y, art);
+  const px = feldWert(kx.preis)?.min ?? Infinity, py = feldWert(ky.preis)?.min ?? Infinity;
+  if (px !== py) return px - py;
+  const wx = ['dauer', 'zertifikat', 'gruppengroesse'].filter((f) => feldWert(kx[f]) !== null).length;
+  const wy = ['dauer', 'zertifikat', 'gruppengroesse'].filter((f) => feldWert(ky[f]) !== null).length;
+  return wy - wx || x.name.wert.localeCompare(y.name.wert, 'de');
+});
+export const telHref = (a) => (feldWert(a.telefon) ? 'tel:' + a.telefon.wert.replace(/[^\d+]/g, '') : null);

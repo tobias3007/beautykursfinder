@@ -11,7 +11,6 @@ const alle = [
   ...(krumen.length ? [{ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: krumen.map((k, i) => ({ '@type': 'ListItem', position: i + 1, name: k.name, item: new URL(k.href, site).href })) }] : []),
   ...jsonld,
 ];
-const plausible = import.meta.env.PLAUSIBLE_DOMAIN;
 ---
 <!doctype html>
 <html lang={land.sprache}>
@@ -23,24 +22,72 @@ const plausible = import.meta.env.PLAUSIBLE_DOMAIN;
   <link rel="canonical" href={canonical} />
   {noindex && <meta name="robots" content="noindex, follow" />}
   {alle.map((j) => <script type="application/ld+json" set:html={JSON.stringify(j)} />)}
-  {plausible && <script defer data-domain={plausible} src="https://plausible.io/js/script.tagged-events.js"></script>}
-  <style>
-    :root{--t:#1d2330;--m:#4a5568;--l:#dde2ea;--a:#0b5cad;--bg:#fff;--s:#f5f7fa}
+  <!-- Datenschutzfreundliche Reichweitenmessung mit Plausible, ohne Cookies -->
+  <script async src="https://plausible.io/js/pa-ZjdaRjQenTcVVlxu3NwQh.js"></script>
+  <script is:inline>
+    window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+    plausible.init()
+  </script>
+  <style is:global>
+    :root{--t:#1f2430;--m:#566070;--l:#e3e6ec;--a:#7b2d5b;--a2:#5c1f43;--ab:#f7eef3;--bg:#fff;--s:#f6f7f9;--ok:#1d6b45;--r:10px}
     *{box-sizing:border-box}
-    body{font:16px/1.6 system-ui,-apple-system,sans-serif;color:var(--t);margin:0;background:var(--bg)}
-    .w{max-width:62rem;margin:0 auto;padding:0 1rem}
-    header{border-bottom:1px solid var(--l)} header .w{display:flex;gap:1.2rem;flex-wrap:wrap;align-items:baseline;padding:.8rem 1rem}
-    header a.logo{font-weight:700;color:var(--t);text-decoration:none}
-    nav.krumen{font-size:.9rem;color:var(--m);padding:.8rem 0 0}
+    html{-webkit-text-size-adjust:100%}
+    body{font:17px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--t);margin:0;background:var(--bg)}
+    .w{max-width:64rem;margin:0 auto;padding:0 1rem}
+    header{border-bottom:1px solid var(--l);background:#fff}
+    header .w{display:flex;gap:.3rem 1.3rem;flex-wrap:wrap;align-items:center;padding:.7rem 1rem}
+    header a{color:var(--t);text-decoration:none;font-size:.95rem;padding:.35rem 0}
+    header a:hover{color:var(--a)}
+    header a.logo{font-weight:800;font-size:1.1rem;color:var(--a);margin-right:.6rem}
+    nav.krumen{font-size:.88rem;color:var(--m);padding:.9rem 0 0}
     nav.krumen a{color:var(--m)}
-    a{color:var(--a)} h1{font-size:1.7rem;line-height:1.25;margin:.8rem 0} h2{font-size:1.25rem;margin:2rem 0 .6rem}
-    .antwort{font-size:1.1rem;background:var(--s);padding:.9rem 1rem;border-left:4px solid var(--a);margin:1rem 0}
+    a{color:var(--a)} a:hover{color:var(--a2)}
+    h1{font-size:clamp(1.55rem,4.5vw,2.2rem);line-height:1.2;margin:.8rem 0 .6rem;letter-spacing:-.01em}
+    h2{font-size:1.3rem;margin:2.2rem 0 .7rem}
+    h3{font-size:1.08rem;margin:0}
+    .antwort{font-size:1.06rem;background:var(--ab);padding:1rem 1.1rem;border-left:4px solid var(--a);border-radius:0 var(--r) var(--r) 0;margin:1rem 0 1.4rem}
+    .stand{color:var(--m);font-size:.88rem}
+    .zahlen{display:grid;grid-template-columns:repeat(auto-fit,minmax(9.5rem,1fr));gap:.7rem;margin:1.2rem 0}
+    .zahl{background:var(--s);border-radius:var(--r);padding:.8rem 1rem}
+    .zahl b{display:block;font-size:1.45rem;line-height:1.2;color:var(--a)} .zahl span{font-size:.86rem;color:var(--m)}
+    .kacheln{display:grid;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));gap:.9rem;list-style:none;padding:0;margin:.5rem 0}
+    .kachel{display:block;border:1px solid var(--l);border-radius:var(--r);padding:1rem 1.1rem;text-decoration:none;color:var(--t);height:100%}
+    .kachel:hover{border-color:var(--a);box-shadow:0 2px 10px rgba(123,45,91,.12)}
+    .kachel strong{display:block;color:var(--a);font-size:1.1rem;margin-bottom:.2rem}
+    .kachel span{font-size:.9rem;color:var(--m);display:block}
+    .chips{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}
+    .chips a{display:inline-block;border:1px solid var(--l);border-radius:999px;padding:.4rem .9rem;text-decoration:none;font-size:.95rem;color:var(--t);background:#fff}
+    .chips a:hover{border-color:var(--a);color:var(--a)}
+    .chips small{color:var(--m)}
+    .filter{display:flex;gap:1.2rem;flex-wrap:wrap;margin:1rem 0;font-size:.95rem}
+    .filter label{display:flex;align-items:center;gap:.45rem;cursor:pointer;min-height:2.75rem}
+    .filter input{width:1.15rem;height:1.15rem;accent-color:var(--a)}
+    .karten{display:grid;gap:.9rem;margin:1rem 0}
+    .karte{border:1px solid var(--l);border-radius:var(--r);padding:1rem 1.1rem}
+    .karte header{border:0;background:none;display:block}
+    .karte .kopf{display:flex;justify-content:space-between;gap:.8rem;align-items:baseline;flex-wrap:wrap}
+    .karte .ort{font-size:.88rem;color:var(--m)}
+    .preis{font-weight:700;color:var(--ok);font-size:1.1rem}
+    .fakten{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;margin:.7rem 0 0;padding:0}
+    .fakten div{display:flex;flex-direction:column}
+    .fakten dt{font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;color:var(--m)}
+    .fakten dd{margin:0;font-weight:600}
+    .leer{color:var(--m);font-size:.92rem;margin:.7rem 0 0}
+    .aktionen{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:.9rem}
+    .btn{display:inline-flex;align-items:center;justify-content:center;min-height:2.75rem;padding:.5rem 1.1rem;border-radius:8px;background:var(--a);color:#fff;text-decoration:none;font-weight:600;font-size:.97rem}
+    .btn:hover{background:var(--a2);color:#fff}
+    .btn.zweit{background:#fff;color:var(--a);border:1px solid var(--a)} .btn.zweit:hover{background:var(--ab);color:var(--a2)}
+    main:has(#f-preis:checked) .karte:not([data-preis="1"]){display:none}
+    main:has(#f-zert:checked) .karte:not([data-zert="1"]){display:none}
     table{border-collapse:collapse;width:100%;font-size:.95rem;display:block;overflow-x:auto}
-    th,td{border-bottom:1px solid var(--l);padding:.5rem .6rem;text-align:left;vertical-align:top}
-    th{background:var(--s)} .stand{color:var(--m);font-size:.9rem}
-    ul.raster{list-style:none;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(14rem,1fr));gap:.4rem .8rem}
-    footer{border-top:1px solid var(--l);margin-top:3rem;padding:1.2rem 0;font-size:.9rem;color:var(--m)}
+    th,td{border-bottom:1px solid var(--l);padding:.55rem .7rem;text-align:left;vertical-align:top}
+    thead th{background:var(--s);font-size:.85rem}
+    tbody th{font-weight:600}
+    .hinweis{background:var(--s);border-radius:var(--r);padding:.9rem 1.1rem;margin:1.6rem 0}
+    footer{border-top:1px solid var(--l);margin-top:3rem;padding:1.4rem 0;font-size:.9rem;color:var(--m);background:var(--s)}
     footer a{color:var(--m)}
+    a:focus-visible,.btn:focus-visible,input:focus-visible{outline:3px solid #c28aa9;outline-offset:2px}
+    @media (max-width:520px){body{font-size:16px} .btn{flex:1 1 100%}}
   </style>
 </head>
 <body>
@@ -53,5 +100,11 @@ const plausible = import.meta.env.PLAUSIBLE_DOMAIN;
     {stand && <p class="stand">Zuletzt geprüft am {datum(datenstand)}.</p>}
   </main>
   <footer><div class="w"><a href="/methodik/">So entstehen unsere Daten</a> · <a href="/impressum/">Impressum</a> · <a href="/datenschutz/">Datenschutz</a></div></footer>
+  <script is:inline>
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[data-pl]');
+      if (a && window.plausible) window.plausible(a.getAttribute('data-pl'), { props: { anbieter: a.getAttribute('data-anbieter') || '' } });
+    });
+  </script>
 </body>
 </html>

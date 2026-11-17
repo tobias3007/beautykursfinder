@@ -1,0 +1,26 @@
+---
+import { auf, preisText, feldWert, telHref } from '../lib/daten.js';
+const { a, k, mitStadt = false } = Astro.props;
+const preis = feldWert(k.preis) !== null;
+const zert = feldWert(k.zertifikat) !== null;
+const tel = telHref(a);
+const andere = feldWert(k.dauer) !== null || zert || feldWert(k.gruppengroesse) !== null;
+const hat = preis || andere;
+---
+<article class="karte" id={a.id} data-preis={preis ? '1' : '0'} data-zert={zert ? '1' : '0'}>
+  <div class="kopf">
+    <h3><a href={`/anbieter/${a.id}/`}>{a.name.wert}</a></h3>
+    {preis && <span class="preis">{preisText(k.preis)}</span>}
+  </div>
+  {mitStadt && <div class="ort">{a.stadt.wert}</div>}
+  {andere && <dl class="fakten">
+    {feldWert(k.dauer) !== null && <div><dt>Dauer</dt><dd>{k.dauer.wert}</dd></div>}
+    {feldWert(k.gruppengroesse) !== null && <div><dt>Gruppe</dt><dd>max. {k.gruppengroesse.wert}</dd></div>}
+    {zert && <div><dt>Zertifikat</dt><dd>laut Anbieter</dd></div>}
+  </dl>}
+  {!hat && <p class="leer">Preis, Dauer und Zertifikat nennt der Anbieter auf seiner Webseite nicht. Frage direkt dort an.</p>}
+  <div class="aktionen">
+    <a class="btn" href={a.webseite.wert} rel="noopener" target="_blank" data-pl="Klick Webseite" data-anbieter={a.id}>Zur Webseite</a>
+    {tel && <a class="btn zweit" href={tel} data-pl="Klick Telefon" data-anbieter={a.id}>Anrufen</a>}
+  </div>
+</article>

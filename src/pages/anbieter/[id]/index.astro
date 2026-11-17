@@ -20,10 +20,10 @@ const gepr = a.name.geprueft;
 <Base titel={titel} beschreibung={`${a.name.wert} in ${stadtName} bietet laut eigener Webseite Schulungen zu ${arten.join(', ')} an. Preis, Dauer und Zertifikat mit Quelle, Stand ${datum(gepr)}.`} noindex={!hatSubstanz(a)} krumen={krumen} jsonld={[lb]} stand={false}>
   <h1>{a.name.wert}, {stadtName}</h1>
   <p class="antwort">{a.name.wert} in {stadtName} bietet laut der eigenen Webseite Schulungen zu {arten.join(', ')} an. Die Angaben unten stammen von dieser Webseite, geprüft am {datum(gepr)}. Fehlendes heißt „auf Anfrage“.</p>
-  <p>
-    Webseite: <a class={`plausible-event-name=Klick+Webseite plausible-event-anbieter=${a.id}`} href={a.webseite.wert} rel="noopener" target="_blank">{a.webseite.wert.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}</a><br />
-    Telefon: {tel ? <a class={`plausible-event-name=Klick+Telefon plausible-event-anbieter=${a.id}`} href={`tel:${tel.replace(/[^\d+]/g, '')}`}>{tel}</a> : 'auf Anfrage'}
-  </p>
+  <div class="aktionen">
+    <a class="btn" href={a.webseite.wert} rel="noopener" target="_blank" data-pl="Klick Webseite" data-anbieter={a.id}>Zur Webseite</a>
+    {tel && <a class="btn zweit" href={`tel:${tel.replace(/[^\d+]/g, '')}`} data-pl="Klick Telefon" data-anbieter={a.id}>{tel}</a>}
+  </div>
   <table>
     <thead><tr><th>Kursart</th><th>Preis</th><th>Dauer</th><th>Gruppe</th><th>Zertifikat</th><th>Termine</th></tr></thead>
     <tbody>{a.kurse.map((k) => <tr><th scope="row">{k.def.name}</th><td>{preisText(k.preis)}</td><td>{auf(k.dauer)}</td><td>{auf(k.gruppengroesse, (n) => `max. ${n}`)}</td><td>{feldWert(k.zertifikat) ? 'laut Anbieter' : 'auf Anfrage'}</td><td>auf Anfrage</td></tr>)}</tbody>
